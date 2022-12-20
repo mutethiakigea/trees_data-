@@ -1,0 +1,33 @@
+# First, we'll start by loading the necessary libraries
+library(tidyverse)
+library(ggplot2)
+
+# Next, we'll read in the data from a CSV file
+tree_data <- read_csv("tree_data.csv")
+
+# Now we'll perform some data cleaning
+# Let's start by removing any rows with missing values
+tree_data <- tree_data %>% drop_na()
+
+# We can also check for and remove any duplicate rows
+tree_data <- tree_data %>% distinct()
+
+# Now let's take a look at the summary statistics for the data
+summary(tree_data)
+
+# Let's visualize the data to see if there are any patterns or trends
+ggplot(data = tree_data, aes(x = height, y = diameter)) +
+  geom_point() +
+  labs(title = "Height vs. Diameter of Trees",
+       x = "Height (ft)",
+       y = "Diameter (in)")
+
+# We can also use the group_by() and summarize() functions to calculate summary statistics for different groups within the data
+tree_data %>% 
+  group_by(species) %>% 
+  summarize(mean_height = mean(height),
+            mean_diameter = mean(diameter))
+
+# Finally, we can use the lm() function to fit a linear model to the data and examine the model summary
+lm_fit <- lm(diameter ~ height, data = tree_data)
+summary(lm_fit)
